@@ -33,7 +33,7 @@ $(document).ready(function() {
             msg.closest(".form-control").removeClass("error").addClass("success");
             flag = true;
         }
-        var dataString = "name=" + name.val() + "&email=" + email.val() + "&subject=" + subject.val() + "&msg=" + msg.val();
+        var dataString = "name=" + name.val() + "&email=" + email.val() + "&subject=" + "subjeact" + "&msg=" + msg.val();
         $(".loading").fadeIn("slow").html("Loading...");
         $.ajax({
             type: "POST",
