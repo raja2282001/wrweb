@@ -44,8 +44,6 @@ $(document).ready(function() {
 
         $(".loading").fadeIn("slow").html("Loading...");
 
-        console.log("hiii",dataString)
-
         $.ajax({
             type: "POST",
             url: "php/contactForm.php",
@@ -57,6 +55,7 @@ $(document).ready(function() {
                     $('.loading').fadeIn('slow').html('<font color="#48af4b">Mail sent Successfully.</font>').delay(3000).fadeOut('slow');
                 } else {
                     $('.loading').fadeIn('slow').html('<font color="#ff5607">Mail not sent.</font>').delay(3000).fadeOut('slow');
+                    console.log("Response:", response);
                 }
             },
             error: function(xhr, status, error) {
