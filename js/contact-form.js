@@ -3,72 +3,71 @@ $(document).ready(function() {
 
     $(".contact-form").submit(function(e) {
         e.preventDefault();
+        
+        // Select form elements
+        var name = $(".name");
+        var email = $(".email");
+        var subject = $(".subject");
+        var msg = $(".message");
+        
+        // Flag to track form validation
+        var flag = true;
 
-        var name = $(".name").val();
-        var email = $(".email").val();
-        var subject = $(".subject").val() || 'No Subject';
-        var msg = $(".message").val();
-
-        $(".form-control").removeClass("error");
-
-        if (name === "") {
-            $(".name").closest(".form-control").addClass("error");
-            $(".name").focus();
+        // Validate form fields
+        if (name.val() === "") {
+            name.closest(".form-control").addClass("error");
+            name.focus();
+            flag = false;
             return false;
         } else {
-            $(".name").closest(".form-control").removeClass("error").addClass("success");
+            name.closest(".form-control").removeClass("error").addClass("success");
         }
-
-        if (email === "") {
-            $(".email").closest(".form-control").addClass("error");
-            $(".email").focus();
+        
+        if (email.val() === "") {
+            email.closest(".form-control").addClass("error");
+            email.focus();
+            flag = false;
             return false;
         } else {
-            $(".email").closest(".form-control").removeClass("error").addClass("success");
+            email.closest(".form-control").removeClass("error").addClass("success");
         }
-
-        if (msg === "") {
-            $(".message").closest(".form-control").addClass("error");
-            $(".message").focus();
+        
+        if (msg.val() === "") {
+            msg.closest(".form-control").addClass("error");
+            msg.focus();
+            flag = false;
             return false;
         } else {
-            $(".message").closest(".form-control").removeClass("error").addClass("success");
+            msg.closest(".form-control").removeClass("error").addClass("success");
         }
-
-        var dataString = {
-            name: name,
-            email: email,
-            subject: subject,
-            msg: msg
-        };
-
-        $(".loading").fadeIn("slow").html("Loading...");
-
-        $.ajax({
-            type: "POST",
-            url: "php/contactForm.php",
-            data: dataString,
-            cache: false,
-            success: function(response) {
-                // $(".form-control").removeClass("success");
-                if (response.trim() === 'success') {
-                    $('.loading').fadeIn('slow').html('<font color="#48af4b">Mail sent Successfully.</font>').delay(3000).fadeOut('slow');
-                } else {
-                    $('.loading').fadeIn('slow').html('<font color="#ff5607">Mail not sent.</font>').delay(3000).fadeOut('slow');
-                    console.error("Response error:", response);
-                    throw new Error("Mail not sent.");
+        
+        // If form validation passes, proceed with AJAX request
+        if (flag) {
+            var dataString = "name=" + name.val() + "&email=" + email.val() + "&subject=" + "Contact" + "&msg=" + msg.val();
+            $(".loading").fadeIn("slow").html("Loading...");
+            
+            $.ajax({
+                type: "POST",
+                data: dataString,
+                url: "php/contactForm.php", // Adjust URL if needed
+                cache: false,
+                success: function (response) {
+                    $(".form-control").removeClass("success");
+                    if (response === 'success') {
+                        $('.loading').fadeIn('slow').html('<font color="#48af4b">Mail sent Successfully.</font>').delay(3000).fadeOut('slow');
+                    } else {
+                        $('.loading').fadeIn('slow').html('<font color="#ff5607">Mail not sent.</font>').delay(3000).fadeOut('slow');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Handle AJAX errors
+                    $('.loading').fadeIn('slow').html('<font color="#ff5607">An error occurred.</font>').delay(3000).fadeOut('slow');
                 }
-            },
-            error: function(xhr, status, error) {
-                $('.loading').fadeIn('slow').html('<font color="#ff5607">Mail not sent.</font>').delay(3000).fadeOut('slow');
-                console.error("AJAX error:", error);
-                throw new Error("Mail not sent.");
-            }
-        });
-
-        return false;
+            });
+        }
+        return false;        
     });
-
+    
     $("#reset").on('click', function() {
         $(".form-control").removeClass("success").removeClass("error");
     });

@@ -1,37 +1,26 @@
-<?php
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = trim($_POST['name']);
-    $email = trim($_POST['email']);
-    $subject = trim($_POST['subject']);
-    $message = trim($_POST['msg']);
+<?
+$name  = $_REQUEST["name"];
+$email = $_REQUEST["email"];
+$subject = $_REQUEST["subject"];
+$msg   = $_REQUEST["msg"];
+$to    = "patelparth4655@gmail.com"; // ENTER YOUR EMAIL ADDRESS
+if (isset($email) && isset($name) && isset($msg)) {
+    $email_subject = "$name sent you a message via YOUR SITE NAME"; // ENTER YOUR EMAIL SUBJECT
+		$headers = "MIME-Version: 1.0" . "\r\n";
+$headers .= "Content-type:text/html;charset=iso-8859-1" . "\r\n";
+$headers .= "From: ".$name." <".$email.">\r\n"."Reply-To: ".$email."\r\n" ;
+$msg     = "From: $name<br/> Email: $email <br/> Subject: $subject <br/> Message: $msg";
+	
+   $mail =  mail($to, $email_subject, $msg, $headers);
+  if($mail)
+	{
+		echo 'success';
+	}
 
-    if (empty($name) || empty($email) || empty($message)) {
-        echo 'error';
-        exit;
-    }
-
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo 'error';
-        exit;
-    }
-
-    $to = 'patelparth4655@gmail.com';
-    $email_subject = "Contact form submission: $subject";
-    $email_body = "You have received a new message from $name.\n\n".
-                  "Here are the details:\n\n".
-                  "Name: $name\n\n".
-                  "Email: $email\n\n".
-                  "Message:\n$message";
-
-    $headers = "From: $email\n";
-    $headers .= "Reply-To: $email";
-
-    if (mail($to, $email_subject, $email_body, $headers)) {
-        echo 'success';
-    } else {
-        echo 'error';
-    }
-} else {
-    echo 'error';
+else
+	{
+		echo 'failed';
+	}
 }
+
 ?>
