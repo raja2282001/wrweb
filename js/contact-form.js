@@ -35,6 +35,7 @@ $(document).ready(function() {
         }
         var dataString = "name=" + name.val() + "&email=" + email.val() + "&subject=" + "subjeact" + "&msg=" + msg.val();
         $(".loading").fadeIn("slow").html("Loading...");
+        console.log(dataString)
         $.ajax({
             type: "POST",
             data: dataString,
