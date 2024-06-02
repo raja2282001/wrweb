@@ -60,6 +60,7 @@ $(document).ready(function() {
             },
             error: function(xhr, status, error) {
                 $('.loading').fadeIn('slow').html('<font color="#ff5607">An error occurred: ' + error + '</font>').delay(3000).fadeOut('slow');
+                console.log("AJAX error:", error);
             }
         });
 
