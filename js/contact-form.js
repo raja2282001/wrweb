@@ -54,15 +54,11 @@ $(document).ready(function() {
                 if (response.trim() === 'success') {
                     $('.loading').fadeIn('slow').html('<font color="#48af4b">Mail sent Successfully.</font>').delay(3000).fadeOut('slow');
                 } else {
-                    $('.loading').fadeIn('slow').html('<font color="#ff5607">Mail not sent.</font>').delay(3000).fadeOut('slow');
-                    console.error("Response error:", response);
-                    throw new Error("Mail not sent.");
+                    handleError("Mail not sent.", response);
                 }
             },
             error: function(xhr, status, error) {
-                $('.loading').fadeIn('slow').html('<font color="#ff5607">Mail not sent.</font>').delay(3000).fadeOut('slow');
-                console.error("AJAX error:", error);
-                throw new Error("Mail not sent.");
+                handleError("An error occurred: " + error);
             }
         });
 
@@ -72,4 +68,9 @@ $(document).ready(function() {
     $("#reset").on('click', function() {
         $(".form-control").removeClass("success").removeClass("error");
     });
+
+    function handleError(message, response) {
+        $('.loading').fadeIn('slow').html('<font color="#ff5607">' + message + '</font>').delay(3000).fadeOut('slow');
+        console.error(message, response || '');
+    }
 });
