@@ -12,27 +12,24 @@ $(document).ready(function() {
         $(".form-control").removeClass("error");
 
         if (name === "") {
-            $(".name").closest(".form-control").addClass("error");
-            $(".name").focus();
+            handleValidationError(".name", "Name is required");
             return false;
         } else {
-            $(".name").closest(".form-control").removeClass("error").addClass("success");
+            markAsSuccess(".name");
         }
 
         if (email === "") {
-            $(".email").closest(".form-control").addClass("error");
-            $(".email").focus();
+            handleValidationError(".email", "Email is required");
             return false;
         } else {
-            $(".email").closest(".form-control").removeClass("error").addClass("success");
+            markAsSuccess(".email");
         }
 
         if (msg === "") {
-            $(".message").closest(".form-control").addClass("error");
-            $(".message").focus();
+            handleValidationError(".message", "Message is required");
             return false;
         } else {
-            $(".message").closest(".form-control").removeClass("error").addClass("success");
+            markAsSuccess(".message");
         }
 
         var dataString = {
@@ -52,7 +49,7 @@ $(document).ready(function() {
             success: function(response) {
                 $(".form-control").removeClass("success");
                 if (response.trim() === 'success') {
-                    $('.loading').fadeIn('slow').html('<font color="#48af4b">Mail sent Successfully.</font>').delay(3000).fadeOut('slow');
+                    displayMessage('Mail sent Successfully.', '#48af4b');
                 } else {
                     handleError("Mail not sent.", response);
                 }
@@ -69,8 +66,22 @@ $(document).ready(function() {
         $(".form-control").removeClass("success").removeClass("error");
     });
 
+    function handleValidationError(selector, message) {
+        $(selector).closest(".form-control").addClass("error");
+        $(selector).focus();
+        displayMessage(message, '#ff5607');
+    }
+
+    function markAsSuccess(selector) {
+        $(selector).closest(".form-control").removeClass("error").addClass("success");
+    }
+
     function handleError(message, response) {
-        $('.loading').fadeIn('slow').html('<font color="#ff5607">' + message + '</font>').delay(3000).fadeOut('slow');
+        displayMessage(message, '#ff5607');
         console.error(message, response || '');
+    }
+
+    function displayMessage(message, color) {
+        $('.loading').fadeIn('slow').html('<font color="' + color + '">' + message + '</font>').delay(3000).fadeOut('slow');
     }
 });
