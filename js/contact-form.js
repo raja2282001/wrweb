@@ -12,24 +12,27 @@ $(document).ready(function() {
         $(".form-control").removeClass("error");
 
         if (name === "") {
-            handleValidationError(".name", "Name is required");
+            $(".name").closest(".form-control").addClass("error");
+            $(".name").focus();
             return false;
         } else {
-            markAsSuccess(".name");
+            $(".name").closest(".form-control").removeClass("error").addClass("success");
         }
 
         if (email === "") {
-            handleValidationError(".email", "Email is required");
+            $(".email").closest(".form-control").addClass("error");
+            $(".email").focus();
             return false;
         } else {
-            markAsSuccess(".email");
+            $(".email").closest(".form-control").removeClass("error").addClass("success");
         }
 
         if (msg === "") {
-            handleValidationError(".message", "Message is required");
+            $(".message").closest(".form-control").addClass("error");
+            $(".message").focus();
             return false;
         } else {
-            markAsSuccess(".message");
+            $(".message").closest(".form-control").removeClass("error").addClass("success");
         }
 
         var dataString = {
@@ -49,13 +52,17 @@ $(document).ready(function() {
             success: function(response) {
                 $(".form-control").removeClass("success");
                 if (response.trim() === 'success') {
-                    displayMessage('Mail sent Successfully.', '#48af4b');
+                    $('.loading').fadeIn('slow').html('<font color="#48af4b">Mail sent Successfully.</font>').delay(3000).fadeOut('slow');
                 } else {
-                    handleError("Mail not sent.", response);
+                    $('.loading').fadeIn('slow').html('<font color="#ff5607">Mail not sent.</font>').delay(3000).fadeOut('slow');
+                    console.error("Response error:", response);
+                    throw new Error("Mail not sent.");
                 }
             },
             error: function(xhr, status, error) {
-                handleError("An error occurred: " + error);
+                $('.loading').fadeIn('slow').html('<font color="#ff5607">Mail not sent.</font>').delay(3000).fadeOut('slow');
+                console.error("AJAX error:", error);
+                throw new Error("Mail not sent.");
             }
         });
 
@@ -65,23 +72,4 @@ $(document).ready(function() {
     $("#reset").on('click', function() {
         $(".form-control").removeClass("success").removeClass("error");
     });
-
-    function handleValidationError(selector, message) {
-        $(selector).closest(".form-control").addClass("error");
-        $(selector).focus();
-        displayMessage(message, '#ff5607');
-    }
-
-    function markAsSuccess(selector) {
-        $(selector).closest(".form-control").removeClass("error").addClass("success");
-    }
-
-    function handleError(message, response) {
-        displayMessage(message, '#ff5607');
-        console.error(message, response || '');
-    }
-
-    function displayMessage(message, color) {
-        $('.loading').fadeIn('slow').html('<font color="' + color + '">' + message + '</font>').delay(3000).fadeOut('slow');
-    }
 });
