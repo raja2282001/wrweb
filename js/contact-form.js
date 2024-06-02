@@ -35,37 +35,36 @@ $(document).ready(function() {
             $(".message").closest(".form-control").removeClass("error").addClass("success");
         }
 
-        var dataString = `<contact>
-                              <name>${name}</name>
-                              <email>${email}</email>
-                              <subject>${subject}</subject>
-                              <message>${msg}</message>
-                          </contact>`;
+        var dataString = {
+            name: name,
+            email: email,
+            subject: subject,
+            msg: msg
+        };
 
         $(".loading").fadeIn("slow").html("Loading...");
 
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "php/contactForm.php", true);
-        xhr.setRequestHeader("Content-Type", "application/xml");
-
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
+        $.ajax({
+            type: "POST",
+            url: "php/contactForm.php",
+            data: dataString,
+            cache: false,
+            success: function(response) {
                 $(".form-control").removeClass("success");
-                if (xhr.status === 200 && xhr.responseText.trim() === 'success') {
+                if (response.trim() === 'success') {
                     $('.loading').fadeIn('slow').html('<font color="#48af4b">Mail sent Successfully.</font>').delay(3000).fadeOut('slow');
                 } else {
                     $('.loading').fadeIn('slow').html('<font color="#ff5607">Mail not sent.</font>').delay(3000).fadeOut('slow');
-                    console.log("Response:", xhr.responseText);
+                    console.error("Response error:", response);
+                    throw new Error("Mail not sent.");
                 }
+            },
+            error: function(xhr, status, error) {
+                $('.loading').fadeIn('slow').html('<font color="#ff5607">Mail not sent.</font>').delay(3000).fadeOut('slow');
+                console.error("AJAX error:", error);
+                throw new Error("Mail not sent.");
             }
-        };
-
-        xhr.onerror = function() {
-            $('.loading').fadeIn('slow').html('<font color="#ff5607">An error occurred: ' + xhr.statusText + '</font>').delay(3000).fadeOut('slow');
-            console.log("AJAX error:", xhr.statusText);
-        };
-
-        xhr.send(dataString);
+        });
 
         return false;
     });
