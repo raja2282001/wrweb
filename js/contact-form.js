@@ -51,7 +51,12 @@ $(document).ready(function() {
             cache: false,
             success: function(response) {
                 $(".form-control").removeClass("success");
-                console.log("success",response)
+                if (response.trim() === 'success') {
+                    $('.loading').fadeIn('slow').html('<font color="#48af4b">Mail sent Successfully.</font>').delay(3000).fadeOut('slow');
+                } else {
+                    $('.loading').fadeIn('slow').html('<font color="#ff5607">Mail not sent.</font>').delay(3000).fadeOut('slow');
+                    console.log("Response:", response);
+                }
             },
             error: function(xhr, status, error) {
                 $('.loading').fadeIn('slow').html('<font color="#ff5607">An error occurred: ' + error + '</font>').delay(3000).fadeOut('slow');
