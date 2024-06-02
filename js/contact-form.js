@@ -50,7 +50,7 @@ $(document).ready(function() {
             data: dataString,
             cache: false,
             success: function(response) {
-                $(".form-control").removeClass("success");
+                // $(".form-control").removeClass("success");
                 if (response.trim() === 'success') {
                     $('.loading').fadeIn('slow').html('<font color="#48af4b">Mail sent Successfully.</font>').delay(3000).fadeOut('slow');
                 } else {
